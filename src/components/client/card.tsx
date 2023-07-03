@@ -6,6 +6,8 @@ import { useId, useRef, useState } from 'react'
 import { useAnimateCard } from '@/hooks/use-animate-card'
 import { cn } from '@/lib/cn'
 import { X } from 'lucide-react'
+import { urlForImage } from '../../../sanity/lib/image'
+import type { ImageProps } from '@/types/globals'
 
 function generateLastSelector(
   max: number,
@@ -21,7 +23,15 @@ function generateLastSelector(
   return result
 }
 
-export default function Card() {
+export default function Card({
+  title,
+  description,
+  coverImage,
+}: {
+  title: string
+  description: string
+  coverImage: ImageProps
+}) {
   const id = useId()
 
   const [open, setOpen] = useState(false)
@@ -57,9 +67,9 @@ export default function Card() {
           </button>
         </div>
         <Image
-          src="/assets/img/portfolio1.jpg"
-          width={320}
-          height={320}
+          src={urlForImage(coverImage).url()}
+          width={640}
+          height={640}
           alt="Portfolio"
           className="aspect-video w-full rounded-md object-cover"
         />
@@ -70,15 +80,15 @@ export default function Card() {
       xl:text-xl"
           onClick={handleCardClose}
         >
-          Title
+          {title}
         </h3>
         <p
-          className="text-sm text-textBody
-      xl:text-base"
+          className="line-clamp-3 text-sm
+      text-textBody xl:text-base"
         >
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore iste
-          rem in, id, ab possimus odio.
+          {description}
         </p>
+        {/* <div>Technologies used:</div> */}
         <div className="mt-6">
           <Button
             text="View"

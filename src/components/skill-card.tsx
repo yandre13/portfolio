@@ -1,13 +1,12 @@
 import { cn } from '@/lib/cn'
-import Image from 'next/image'
 
 export default function SkillCard({
   title,
-  path,
+  svg,
   color,
 }: {
   title: string
-  path: string
+  svg: string
   color: 'sky' | 'orange' | 'black' | 'blue' | 'green' | 'yellow' | 'darkblue'
 }) {
   return (
@@ -40,12 +39,9 @@ export default function SkillCard({
           }
         )}
       >
-        <Image
-          width={100}
-          height={100}
-          src={path}
-          alt="Javascript"
-          className="h-14 w-14"
+        <div
+          className="flex h-14 w-14 items-center justify-center"
+          dangerouslySetInnerHTML={{ __html: svg }}
         />
         <h5 className="text-sm font-medium text-secondary transition-colors duration-700 group-hover:text-textBody">
           {title}

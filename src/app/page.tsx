@@ -6,8 +6,14 @@ import Navbar from '@/components/client/navbar'
 import SkillCard from '@/components/skill-card'
 import { Download, Dribbble, Github, Heart, Linkedin } from 'lucide-react'
 import Image from 'next/image'
+import { client } from '../../sanity/lib/client'
+import { queryHome } from '../../sanity/queries/home'
+import { urlForImage } from '../../sanity/lib/image'
+import type { HomeProps } from '@/types/home'
 
-export default function Home() {
+export default async function Home() {
+  const data: HomeProps = await client.fetch(queryHome)
+
   return (
     <>
       <Navbar />
@@ -79,21 +85,19 @@ export default function Home() {
               <h1
                 className="text-4xl font-semibold text-textTitle
             lg:text-6xl"
-              >
-                Hi, Im <span className="text-primary">Yaser</span>
-              </h1>
+                dangerouslySetInnerHTML={{ __html: data.hero.title }}
+              />
               <h3
                 className="mt-1.5 text-lg font-semibold text-textBody
             lg:mt-4"
               >
-                Frontend Engineer
+                {data.hero.role}
               </h3>
               <p
                 className="mt-3 text-textBody
             lg:mt-5 lg:text-lg"
               >
-                High level experience in web design and development knowledge,
-                producing quality work.
+                {data.hero.description}
               </p>
               <div className="mt-8">
                 <Button
@@ -111,7 +115,7 @@ export default function Home() {
               className="text-center text-3xl font-semibold text-textTitle
           lg:text-5xl"
             >
-              About Me
+              {data.about.title}
             </h2>
             <div
               className="mt-10
@@ -124,7 +128,7 @@ export default function Home() {
             xl:px-[90px]"
               >
                 <Image
-                  src="/assets/img/about.jpg"
+                  src={urlForImage(data.about.image).url()}
                   width={340}
                   height={340}
                   alt="About me"
@@ -141,33 +145,25 @@ export default function Home() {
                   className="text-textBody
               lg:text-lg"
                 >
-                  I am a Frontend Developer with 2 years of experience. I have
-                  serious passion for UI effects, animations and creating
-                  intuitive, dynamic user experiences. Lets make something
-                  special.
+                  {data.about.description}
                 </p>
                 <div
                   className="mx-auto mt-8 grid max-w-xs grid-cols-3
               md:ml-0"
                 >
-                  <div className="col-span-1 flex flex-col justify-center gap-1 p-2">
-                    <span className="text-center text-xl font-bold">03+</span>
-                    <span className="text-center text-sm">
-                      Years <br /> experience
-                    </span>
-                  </div>
-                  <div className="col-span-1 flex flex-col justify-center gap-1 p-2">
-                    <span className="text-center text-xl font-bold">+10</span>
-                    <span className="text-center text-sm">
-                      Completed <br /> projects
-                    </span>
-                  </div>
-                  <div className="col-span-1 flex flex-col justify-center gap-1 p-2">
-                    <span className="text-center text-xl font-bold">03</span>
-                    <span className="text-center text-sm">
-                      Companies <br /> worked
-                    </span>
-                  </div>
+                  {data.about.experiences.map((experience) => (
+                    <div
+                      className="col-span-1 flex flex-col justify-center gap-1 p-2"
+                      key={experience._key}
+                    >
+                      <span className="text-center text-xl font-bold">
+                        {experience.info}
+                      </span>
+                      <span className="text-center text-sm">
+                        {experience.label}
+                      </span>
+                    </div>
+                  ))}
                   <div
                     className="col-span-3 mt-8 flex justify-center
                 md:justify-start"
@@ -189,13 +185,13 @@ export default function Home() {
               className="text-center text-3xl font-semibold text-textTitle
           lg:text-5xl"
             >
-              Skills
+              {data.skills.title}
             </h2>
             <p
               className="mt-4 text-sm text-textBody
           md:text-center md:text-base"
             >
-              These are the technologies I have been working with recently:
+              {data.skills.description}
             </p>
             <div
               className="mt-8 px-4
@@ -207,69 +203,15 @@ export default function Home() {
             md:grid-cols-3
             lg:grid-cols-6"
               >
-                <div className="col-span-1">
-                  <SkillCard
-                    path="/assets/svg/html.svg"
-                    title="HTML 5"
-                    color="orange"
-                  />
-                </div>
-                <div className="col-span-1">
-                  <SkillCard
-                    path="/assets/svg/css.svg"
-                    title="CSS"
-                    color="blue"
-                  />
-                </div>
-                <div className="col-span-1">
-                  <SkillCard
-                    path="/assets/svg/js.svg"
-                    title="Javascript"
-                    color="yellow"
-                  />
-                </div>
-                <div className="col-span-1">
-                  <SkillCard
-                    path="/assets/svg/ts.svg"
-                    title="Typescript"
-                    color="darkblue"
-                  />
-                </div>
-                <div className="col-span-1">
-                  <SkillCard
-                    path="/assets/svg/react.svg"
-                    title="React"
-                    color="sky"
-                  />
-                </div>
-                <div className="col-span-1">
-                  <SkillCard
-                    path="/assets/svg/next.svg"
-                    title="Next.js"
-                    color="black"
-                  />
-                </div>
-                <div className="col-span-1">
-                  <SkillCard
-                    path="/assets/svg/css.svg"
-                    title="CSS"
-                    color="blue"
-                  />
-                </div>
-                <div className="col-span-1">
-                  <SkillCard
-                    path="/assets/svg/js.svg"
-                    title="Javascript"
-                    color="yellow"
-                  />
-                </div>
-                <div className="col-span-1">
-                  <SkillCard
-                    path="/assets/svg/ts.svg"
-                    title="Typescript"
-                    color="darkblue"
-                  />
-                </div>
+                {data.skills.items.map((skill) => (
+                  <div className="col-span-1" key={skill._id}>
+                    <SkillCard
+                      svg={skill.icon}
+                      title={skill.label}
+                      color="orange"
+                    />
+                  </div>
+                ))}
               </div>
             </div>
             <div className="mt-10 flex justify-center">
@@ -287,7 +229,7 @@ export default function Home() {
               className="text-center text-3xl font-semibold text-textTitle
           lg:text-5xl"
             >
-              Experience & Education
+              {data.exp_edu.title}
             </h2>
             <div
               className="mt-10 grid
@@ -297,54 +239,40 @@ export default function Home() {
                 className="flex flex-col gap-6
             lg:gap-8"
               >
-                <div>
-                  <ExpCard
-                    date="2021 - 2022"
-                    title="Frontend Engineer"
-                    at="Zoluxiones"
-                    content="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-                  />
-                </div>
-                <div>
-                  <ExpCard
-                    date="2021 - 2022"
-                    title="Frontend Engineer"
-                    at="Zoluxiones"
-                    content="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-                  />
-                </div>
-                <div>
-                  <ExpCard
-                    date="2021 - 2022"
-                    title="Frontend Engineer"
-                    at="Zoluxiones"
-                    content="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-                    hideLine
-                  />
-                </div>
+                {data.exp_edu.items
+                  .filter((item) => item._type === 'item_exp')
+                  .map((item, index, arr) => (
+                    <div key={item._key}>
+                      <ExpCard
+                        date={item.date}
+                        title={item.title}
+                        at={item.company!}
+                        content={item.description}
+                        hideLine={index === arr.length - 1}
+                      />
+                    </div>
+                  ))}
               </div>
               <div
                 className="flex flex-col gap-6
             lg:gap-8"
               >
-                <div>
-                  <ExpCard
-                    date="2017 - 2022"
-                    title="Software development"
-                    at="Idat"
-                    content="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-                    spacer
-                  />
-                </div>
-                <div>
-                  <ExpCard
-                    date="Present"
-                    title="Fullstack Developement"
-                    at="Online"
-                    content="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-                    hideLine
-                  />
-                </div>
+                {data.exp_edu.items
+                  .filter((item) => item._type === 'item_edu')
+                  .map((item, index, arr) => (
+                    <div key={item._key}>
+                      <ExpCard
+                        date={item.date}
+                        title={item.title}
+                        at={item.academy!}
+                        content={item.description}
+                        // only for first item
+                        spacer={index === 0}
+                        // only for last item
+                        hideLine={index === arr.length - 1}
+                      />
+                    </div>
+                  ))}
               </div>
             </div>
           </div>
@@ -363,24 +291,11 @@ export default function Home() {
           lg:mt-16"
             >
               <Carousel>
-                <CarouselSlide>
-                  <Card />
-                </CarouselSlide>
-                <CarouselSlide>
-                  <Card />
-                </CarouselSlide>
-                <CarouselSlide>
-                  <Card />
-                </CarouselSlide>
-                <CarouselSlide>
-                  <Card />
-                </CarouselSlide>
-                <CarouselSlide>
-                  <Card />
-                </CarouselSlide>
-                <CarouselSlide>
-                  <Card />
-                </CarouselSlide>
+                {data.portfolio.items.map((project) => (
+                  <CarouselSlide key={project._id}>
+                    <Card {...project} />
+                  </CarouselSlide>
+                ))}
               </Carousel>
             </div>
           </div>
