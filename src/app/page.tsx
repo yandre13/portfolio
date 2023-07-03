@@ -35,17 +35,22 @@ export default async function Home() {
             <nav className="col-span-1 self-center">
               <ul className="flex flex-col gap-2 text-primary">
                 <li className="flex">
-                  <a href="#" className="p-2">
+                  <a
+                    href="https://www.linkedin.com/in/yaser-qui%C3%B1onez-471a84193"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2"
+                  >
                     <Linkedin />
                   </a>
                 </li>
                 <li className="flex">
-                  <a href="#" className="p-2">
-                    <Dribbble />
-                  </a>
-                </li>
-                <li className="flex">
-                  <a href="#" className="p-2">
+                  <a
+                    href="https://github.com/yandre13"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2"
+                  >
                     <Github />
                   </a>
                 </li>
@@ -61,7 +66,7 @@ export default async function Home() {
                 width={320}
                 height={320}
                 alt="Profile"
-                className="object-cover"
+                className="max-h-[320px] rounded-full object-cover object-top"
               />
             </div>
             <div
@@ -269,7 +274,7 @@ export default async function Home() {
           </div>
         </section>
         {/* PORTFOLIO */}
-        <section id="Portfolio">
+        <section id="Portfolio" className="relative">
           <div className="mb-8 py-10 lg:mb-20 lg:py-20">
             <h2
               className="text-center text-3xl font-semibold text-textTitle

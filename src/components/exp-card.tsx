@@ -21,13 +21,13 @@ export default function ExpCard({
   return (
     <>
       {spacer && (
-        <hr className="my-8 h-[1px] border-none bg-gradient-to-r from-primary to-purple-300 md:hidden" />
+        <hr className="my-8 h-[1px] border-none bg-gradient-to-r from-primary to-primary/30 md:hidden" />
       )}
       <div
         className={cn(
           'relative flex gap-5',
           !hideLine &&
-            'after:absolute after:left-5 after:top-0 after:-z-10 after:h-[calc(100%_+_32px)] after:w-[1px] after:bg-gradient-to-b after:from-primary after:to-purple-300'
+            'after:absolute after:left-5 after:top-0 after:-z-10 after:h-[calc(100%_+_32px)] after:w-[1px] after:bg-gradient-to-b after:from-primary after:to-primary/30'
         )}
       >
         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white">

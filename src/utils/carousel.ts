@@ -39,6 +39,13 @@ export function getSequenceOpen(
       { duration: 0 },
     ],
     [
+      `#Portfolio`,
+      {
+        zIndex: 100,
+      },
+      { duration: 0 },
+    ],
+    [
       `#${id}`,
       { x, y, maxWidth: `${maxWidth}px` },
       { duration: 0.5, delay: 0.2 },
@@ -65,6 +72,13 @@ export function getSequenceClose(id: string, maxWidth: number) {
     ],
 
     [`body`, { overflowY: 'initial' }, { duration: 0.2, at: 0.3 }],
+    [
+      `#Portfolio`,
+      {
+        zIndex: '1',
+      },
+      { duration: 0.2 },
+    ],
   ]
   return sequence
 }
