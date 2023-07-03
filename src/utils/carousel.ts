@@ -41,10 +41,9 @@ export function getSequenceOpen(
     [
       `#${id}`,
       { x, y, maxWidth: `${maxWidth}px` },
-      { duration: 0.4, delay: 0.2 },
+      { duration: 0.5, delay: 0.2 },
     ],
-    [`#${id} .Child`, { scale: 1 }, { duration: 0.35, at: 0.3 }],
-    [`.Overlay`, { scale: 8, zIndex: 60 }, { duration: 0, at: 0.4 }],
+    [`.Overlay`, { scale: 8, zIndex: 60 }, { duration: 0, at: 0.5 }],
     [`.Overlay`, { opacity: 1 }, { duration: 0.3, at: 0.4 }],
     [`body`, { overflowY: 'hidden' }, { duration: 0.2, at: 1 }],
   ]
@@ -64,17 +63,6 @@ export function getSequenceClose(id: string, maxWidth: number) {
       },
       { duration: 0.4, at: 0.3 },
     ],
-    // [
-    //   `#${id}`,
-    //   {
-    //     position: 'static',
-    //     zIndex: 0,
-    //   },
-    //   { duration: 0.001, at: 0.6 },
-    // ], // after animation
-    [`#${id} .Child`, { scale: 1 }, { duration: 0.4, at: 0.2 }],
-    [`#${id} .Info`, { opacity: 0 }, { duration: 0.4, at: 0.2 }],
-    [`#${id} .Info`, { maxHeight: 0 }, { duration: 0.1, at: 0.2 }],
 
     [`body`, { overflowY: 'initial' }, { duration: 0.2, at: 0.3 }],
   ]

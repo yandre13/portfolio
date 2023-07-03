@@ -15,11 +15,13 @@ export function useAnimateCard({
   elementRef,
   onOpen,
   onClose,
+  onInitClose,
   sizes,
 }: {
   open: boolean
   elementRef: HTMLDivElement | null
   onClose?: () => void
+  onInitClose?: () => void
   onOpen?: () => void
   sizes: {
     open: {
@@ -31,12 +33,12 @@ export function useAnimateCard({
   const isMd = useMediaQuery('(min-width: 768px)')
   const newId = elementRef?.id.replace(/:/g, '\\:')!
 
-  const handleCardOpen = useCallback(() => {
+  const handleCardOpen = useCallback(async () => {
     if (!open && isMd) {
       onOpen?.()
       const exes = calculateTranslate(elementRef, sizes.open)
       const parentLi = elementRef?.parentElement!
-      const maxWidth = parentLi.clientWidth - MAX_PER_VIEW
+      const maxWidth = parentLi.clientWidth
       const sequence = getSequenceOpen(
         newId,
         exes,
@@ -57,8 +59,9 @@ export function useAnimateCard({
     }
 
     if (open && isMd) {
+      onInitClose?.()
       const parentLi = elementRef?.parentElement!
-      const maxWidth = parentLi.clientWidth - MAX_PER_VIEW
+      const maxWidth = parentLi.clientWidth
       const sequence = getSequenceClose(newId, maxWidth)
       // @ts-ignore
       animate(sequence).then(() => {

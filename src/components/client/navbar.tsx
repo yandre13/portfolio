@@ -48,10 +48,10 @@ export default function Navbar() {
   }
 
   useEffect(() => {
-    let prevScrollPos = window.pageYOffset
+    let prevScrollPos = window.scrollY
 
     const handleScroll = () => {
-      const currentScrollPos = window.pageYOffset
+      const currentScrollPos = window.scrollY
       const maxScrollPos =
         document.documentElement.scrollHeight - window.innerHeight
 
@@ -75,7 +75,7 @@ export default function Navbar() {
       prevScrollPos = currentScrollPos
     }
 
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
 
     return () => window.removeEventListener('scroll', handleScroll)
   }, [clicked])
@@ -83,13 +83,14 @@ export default function Navbar() {
   return (
     <header
       className={cn(
-        'fixed bottom-0 left-0 z-50 w-full bg-white bg-opacity-30 shadow-2xl backdrop-blur-md transition-all duration-300',
-        'lg:bottom-auto lg:top-0 lg:bg-opacity-10 lg:shadow',
+        'fixed bottom-0 left-0 z-50 w-full border-t border-neutral-200 bg-white bg-opacity-30 backdrop-blur-md transition-all duration-300',
+        'lg:bottom-auto lg:top-0 lg:border-t-0 lg:bg-opacity-10',
         !isLg
           ? visible
             ? 'translate-y-0'
             : 'translate-y-full'
-          : 'translate-y-0'
+          : 'translate-y-0',
+        isLg && activeSection !== 'Home' && 'shadow'
       )}
     >
       <div className="lg:container lg:flex lg:items-center lg:justify-between lg:py-1">

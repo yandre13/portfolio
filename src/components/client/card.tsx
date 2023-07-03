@@ -2,39 +2,64 @@
 import Image from 'next/image'
 import Button from '../button'
 import { ArrowRight } from 'lucide-react'
-import { useId, useRef, useState } from 'react'
+import { useCallback, useId, useRef, useState } from 'react'
 import { useAnimateCard } from '@/hooks/use-animate-card'
 import { cn } from '@/lib/cn'
 import { X } from 'lucide-react'
+import useMediaQuery from '@/hooks/use-media-query'
+import type { Project } from '@/types'
 
 export default function Card({
   title,
   description,
   image,
-}: {
-  title: string
-  description: string
-  image: {
-    url: string
-  }
-}) {
+  callToAction,
+  skills,
+}: Project) {
   const id = useId()
 
   const [open, setOpen] = useState(false)
+  const [showContent, setShowContent] = useState(false)
+
   const ref = useRef<HTMLDivElement>(null)
+  const isLg = useMediaQuery('(min-width: 992px)')
 
   const { handleCardClose, handleCardOpen } = useAnimateCard({
     elementRef: ref.current,
     open,
-    onOpen: () => setOpen(true),
+    onOpen: async () => {
+      setOpen(true)
+      await new Promise((resolve) => setTimeout(resolve, 200))
+      setShowContent(true)
+    },
     onClose: () => setOpen(false),
+    onInitClose: () => setShowContent(false),
     sizes: {
       open: {
-        maxWidth: 600,
-        maxHeight: 600,
+        maxWidth: 640,
+        maxHeight: 640,
       },
     },
   })
+
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>) => {
+      if (isLg) {
+        e.preventDefault()
+        if (!open) {
+          handleCardOpen()
+        } else {
+          const href = callToAction.url
+          const a = document.createElement('a')
+          a.href = href
+          a.target = '_blank'
+          a.rel = 'noopener noreferrer'
+          a.click()
+        }
+      }
+    },
+    [callToAction.url, handleCardOpen, isLg, open]
+  )
 
   return (
     <div className="w-full rounded-md shadow-md" id={id} ref={ref}>
@@ -62,8 +87,8 @@ export default function Card({
       </div>
       <div className="px-4 pb-5">
         <h3
-          className="mb-2 mt-5 text-lg font-semibold text-textTitle
-      xl:text-xl"
+          className="mb-2 mt-5 line-clamp-1 text-lg font-semibold
+      text-textTitle xl:text-xl"
           onClick={handleCardClose}
         >
           {title}
@@ -74,15 +99,38 @@ export default function Card({
         >
           {description}
         </p>
-        {/* <div>Technologies used:</div> */}
+        <div
+          className={cn(
+            'max-h-0 overflow-hidden opacity-0 transition-all duration-300 ease-in',
+
+            showContent && 'max-h-96 opacity-100'
+          )}
+        >
+          <h4 className="my-5 font-semibold">{skills.title}</h4>
+
+          <ul className="mb-2 flex gap-3">
+            {skills.skill_items.map((skill) => (
+              <li key={skill.id}>
+                <div
+                  className="flex h-10 w-10 items-center justify-center overflow-hidden"
+                  dangerouslySetInnerHTML={{ __html: skill.svg }}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
         <div className="mt-6">
           <Button
-            text="View"
+            to={callToAction.url}
+            text={isLg && open ? 'See live' : callToAction.text}
             icon={<ArrowRight className="h-5 w-5" />}
-            onClick={handleCardOpen}
+            external={!!callToAction.external}
+            onClick={handleClick}
           />
         </div>
       </div>
     </div>
   )
 }
+
+//TODO: add jotai

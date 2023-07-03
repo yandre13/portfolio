@@ -40,7 +40,7 @@ export default function SkillCard({
         )}
       >
         <div
-          className="flex h-14 w-14 items-center justify-center"
+          className="flex h-14 w-14 items-center justify-center overflow-hidden"
           dangerouslySetInnerHTML={{ __html: svg }}
         />
         <h5 className="text-sm font-medium text-secondary transition-colors duration-700 group-hover:text-textBody">

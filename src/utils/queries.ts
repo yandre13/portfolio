@@ -80,6 +80,14 @@ query MyQuery {
           url
         }
         description
+        skills{
+          title
+          skill_items{
+            id
+            title
+            svg
+          }
+        }
         callToAction {
           id
           text
@@ -91,4 +99,5 @@ query MyQuery {
     }
   }
 }
+
 `

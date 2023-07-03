@@ -1,19 +1,31 @@
+import Link from 'next/link'
+
 export default function Button({
   text,
+  to,
   icon,
+  download,
+  external,
   onClick,
 }: {
   text: string
+  to: string
   icon: React.ReactNode
-  onClick?: () => void
+  download?: boolean
+  external?: boolean
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
 }) {
   return (
-    <button
-      className="flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-white"
+    <Link
+      href={to}
+      download={download}
+      target={external ? '_blank' : '_self'}
+      rel={external ? 'noopener noreferrer' : ''}
+      className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-white"
       onClick={onClick}
     >
       <span>{text}</span>
       {icon}
-    </button>
+    </Link>
   )
 }

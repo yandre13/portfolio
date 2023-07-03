@@ -23,7 +23,7 @@ export default function Carousel({ children }: { children: React.ReactNode }) {
         // height: isLg ? 120 : 'auto',
         destroy: isLg,
       }}
-      className="w-full cursor-move lg:container"
+      className="w-full cursor-move lg:container [&>div]:pb-3"
     >
       {children}
       <div className="Overlay fixed left-0 top-0 -z-10 h-full w-full cursor-auto bg-black bg-opacity-50 opacity-0" />

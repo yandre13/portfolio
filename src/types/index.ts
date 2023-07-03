@@ -38,10 +38,10 @@ export type ExperienceElement = {
 export type HomeExperience = {
   title: string
   description: null
-  items: Item[]
+  items: ItemExperience[]
 }
 
-export type Item = {
+export type ItemExperience = {
   id: string
   date: string
   title: string
@@ -59,6 +59,18 @@ export type Hero = {
   id?: string
 }
 
+export type Project = {
+  id: string
+  title: string
+  image: Image
+  description: string
+  skills: {
+    title: string
+    skill_items: Skill[]
+  }
+  callToAction: CallToAction
+}
+
 export type Image = {
   id: string
   url: string
@@ -67,7 +79,7 @@ export type Image = {
 export type Portfolio = {
   title: string
   description: null
-  projects: Hero[]
+  projects: Project[]
 }
 
 export type Skills = {
