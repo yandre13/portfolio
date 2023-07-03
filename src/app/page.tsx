@@ -6,13 +6,17 @@ import Navbar from '@/components/client/navbar'
 import SkillCard from '@/components/skill-card'
 import { Download, Dribbble, Github, Heart, Linkedin } from 'lucide-react'
 import Image from 'next/image'
-import { client } from '../../sanity/lib/client'
-import { queryHome } from '../../sanity/queries/home'
-import { urlForImage } from '../../sanity/lib/image'
-import type { HomeProps } from '@/types/home'
+import type { ResponseCMS } from '@/types'
+import { hygraphClient } from '@/lib/hygraph'
+import { queryHome } from '@/utils/queries'
 
 export default async function Home() {
-  const data: HomeProps = await client.fetch(queryHome)
+  const response = await hygraphClient().fetch<ResponseCMS>(queryHome)
+  const data = response.home_[0]
+
+  if (!data) {
+    return <div>Loading...</div>
+  }
 
   return (
     <>
@@ -128,7 +132,7 @@ export default async function Home() {
             xl:px-[90px]"
               >
                 <Image
-                  src={urlForImage(data.about.image).url()}
+                  src={data.about.image.url}
                   width={340}
                   height={340}
                   alt="About me"
@@ -154,10 +158,10 @@ export default async function Home() {
                   {data.about.experiences.map((experience) => (
                     <div
                       className="col-span-1 flex flex-col justify-center gap-1 p-2"
-                      key={experience._key}
+                      key={experience.id}
                     >
                       <span className="text-center text-xl font-bold">
-                        {experience.info}
+                        {experience.number}
                       </span>
                       <span className="text-center text-sm">
                         {experience.label}
@@ -203,11 +207,11 @@ export default async function Home() {
             md:grid-cols-3
             lg:grid-cols-6"
               >
-                {data.skills.items.map((skill) => (
-                  <div className="col-span-1" key={skill._id}>
+                {data.skills.skills.map((skill) => (
+                  <div className="col-span-1" key={skill.id}>
                     <SkillCard
-                      svg={skill.icon}
-                      title={skill.label}
+                      svg={skill.svg}
+                      title={skill.title}
                       color="orange"
                     />
                   </div>
@@ -229,7 +233,7 @@ export default async function Home() {
               className="text-center text-3xl font-semibold text-textTitle
           lg:text-5xl"
             >
-              {data.exp_edu.title}
+              {data.experience.title}
             </h2>
             <div
               className="mt-10 grid
@@ -239,14 +243,14 @@ export default async function Home() {
                 className="flex flex-col gap-6
             lg:gap-8"
               >
-                {data.exp_edu.items
-                  .filter((item) => item._type === 'item_exp')
+                {data.experience.items
+                  .filter((item) => !item.education)
                   .map((item, index, arr) => (
-                    <div key={item._key}>
+                    <div key={item.id}>
                       <ExpCard
                         date={item.date}
                         title={item.title}
-                        at={item.company!}
+                        at={item.at}
                         content={item.description}
                         hideLine={index === arr.length - 1}
                       />
@@ -257,14 +261,14 @@ export default async function Home() {
                 className="flex flex-col gap-6
             lg:gap-8"
               >
-                {data.exp_edu.items
-                  .filter((item) => item._type === 'item_edu')
+                {data.experience.items
+                  .filter((item) => item.education)
                   .map((item, index, arr) => (
-                    <div key={item._key}>
+                    <div key={item.id}>
                       <ExpCard
                         date={item.date}
                         title={item.title}
-                        at={item.academy!}
+                        at={item.at}
                         content={item.description}
                         // only for first item
                         spacer={index === 0}
@@ -291,8 +295,8 @@ export default async function Home() {
           lg:mt-16"
             >
               <Carousel>
-                {data.portfolio.items.map((project) => (
-                  <CarouselSlide key={project._id}>
+                {data.portfolio.projects.map((project) => (
+                  <CarouselSlide key={project.id}>
                     <Card {...project} />
                   </CarouselSlide>
                 ))}

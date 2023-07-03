@@ -6,31 +6,17 @@ import { useId, useRef, useState } from 'react'
 import { useAnimateCard } from '@/hooks/use-animate-card'
 import { cn } from '@/lib/cn'
 import { X } from 'lucide-react'
-import { urlForImage } from '../../../sanity/lib/image'
-import type { ImageProps } from '@/types/globals'
-
-function generateLastSelector(
-  max: number,
-  baseSelector: string,
-  selector: string
-) {
-  let result = baseSelector
-
-  Array.from({ length: max - 1 }).forEach(() => {
-    result += ` + ${selector}`
-  })
-
-  return result
-}
 
 export default function Card({
   title,
   description,
-  coverImage,
+  image,
 }: {
   title: string
   description: string
-  coverImage: ImageProps
+  image: {
+    url: string
+  }
 }) {
   const id = useId()
 
@@ -67,7 +53,7 @@ export default function Card({
           </button>
         </div>
         <Image
-          src={urlForImage(coverImage).url()}
+          src={image.url}
           width={640}
           height={640}
           alt="Portfolio"
