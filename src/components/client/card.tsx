@@ -24,6 +24,8 @@ export default function Card({
   const ref = useRef<HTMLDivElement>(null)
   const isLg = useMediaQuery('(min-width: 992px)')
 
+  const openOnLg = isLg && !open
+
   const { handleCardClose, handleCardOpen } = useAnimateCard({
     elementRef: ref.current,
     open,
@@ -41,25 +43,6 @@ export default function Card({
       },
     },
   })
-
-  const handleClick = useCallback(
-    (e: React.MouseEvent<HTMLAnchorElement>) => {
-      if (isLg) {
-        e.preventDefault()
-        if (!open) {
-          handleCardOpen()
-        } else {
-          const href = callToAction.url
-          const a = document.createElement('a')
-          a.href = href
-          a.target = '_blank'
-          a.rel = 'noopener noreferrer'
-          a.click()
-        }
-      }
-    },
-    [callToAction.url, handleCardOpen, isLg, open]
-  )
 
   return (
     <div className="w-full rounded-md shadow-md" id={id} ref={ref}>
@@ -121,11 +104,11 @@ export default function Card({
         </div>
         <div className="mt-6">
           <Button
-            to={callToAction.url}
-            text={isLg && open ? 'See live' : callToAction.text}
+            to={openOnLg ? '#' : callToAction.url}
+            text={openOnLg ? callToAction.text : 'See live'}
             icon={<ArrowRight className="h-5 w-5" />}
-            external={!!callToAction.external}
-            onClick={handleClick}
+            external={openOnLg ? false : !!callToAction.external}
+            onClick={handleCardOpen}
           />
         </div>
       </div>
